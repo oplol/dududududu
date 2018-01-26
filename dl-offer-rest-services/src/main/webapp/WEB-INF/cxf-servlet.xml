@@ -1,0 +1,152 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xsi:schemaLocation="
+						http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://cxf.apache.org/jaxws 
+						http://cxf.apache.org/schemas/jaxws.xsd 
+						http://cxf.apache.org/jaxrs 
+						http://cxf.apache.org/schemas/jaxrs.xsd
+						http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+
+
+
+	<!-- <bean id="objectMapper" class="com.lifescan.dms.domain.model.json.ObjectMapperAPI"/>
+	
+
+
+
+	<bean id="daoFactory" class="com.lifescan.dms.dao.DAOFactory"
+		factory-method="getDAOFactory">
+		<constructor-arg index="0" value="connect" />
+		<constructor-arg index="1">
+			<list>
+			    <value>${environmentConfig.databaseDefaultSchema}</value>
+			    <value type="java.lang.Boolean">true</value>
+			    <value type="java.lang.Boolean">true</value>
+			    <value type="java.lang.Boolean">true</value>			    
+			</list>    
+		</constructor-arg>
+	</bean>
+	
+	
+	
+	<bean id="daoUtil" class="com.lifescan.dms.dao.utils.DAOUtil"/>
+	
+
+	
+	<bean id="sessionFactory"
+		class="com.lifescan.dms.rest.session.SessionFactory"/>
+
+
+	<bean id="sessionManager" class="com.lifescan.dms.rest.session.SessionManager" />
+
+	<bean id="readingManipulatorFactory"
+		class="com.lifescan.dms.api.services.readings.ReadingManipulatorFactory">
+		<constructor-arg index="0" ref="objectMapper" />
+		<constructor-arg index="1" ref="daoFactory" />
+		<constructor-arg index="2" ref="daoUtil" />
+		<constructor-arg index="3" ref="sessionManager" />
+	</bean>
+	
+	<bean id="readingSearchFactory"
+		class="com.lifescan.dms.api.services.search.ReadingSearchFactory">
+		<constructor-arg index="0" ref="objectMapper" />
+		<constructor-arg index="1" ref="daoFactory" />
+		<constructor-arg index="2" ref="daoUtil" />
+		<constructor-arg index="3" ref="sessionManager" />
+	</bean>
+	
+	<bean id="healthDataFactory" class="com.lifescan.dms.api.services.healthdata.HealthDataFactory">
+		<constructor-arg index="0" ref="objectMapper" />
+		<constructor-arg index="1" ref="daoFactory" />
+		<constructor-arg index="2" ref="daoUtil" />
+		<constructor-arg index="3" ref="sessionManager" />
+	</bean>
+	
+	<bean id="exceptionProvider" class="com.lifescan.dms.rest.exception.ExceptionProvider" />
+	 -->
+
+	<jaxrs:server id="restServer" address="/rest">
+		<jaxrs:providers>
+		
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+				<!--  <property name="mapper" ref="objectMapper" /> -->
+			</bean>
+<!--
+			  <bean id="sessionFilter" class="com.lifescan.dms.rest.filter.PatientClinicSessionFilter">
+				<property name="sessionManager" ref="sessionManager" />
+				<property name="exceptionProvider" ref="exceptionProvider" />
+				<property name="sessionFactory" ref="sessionFactory" />
+			</bean>
+
+			<bean id="exceptionProviderForServer" class="com.lifescan.dms.rest.exception.ExceptionProvider" />								
+			<bean id="responseFilter" class="com.lifescan.dms.rest.filter.ResponseFilter" />
+			-->
+		</jaxrs:providers>
+		<jaxrs:serviceBeans>
+		    <!--  <ref bean="readingService" />
+		    <ref bean="searchService" />
+		    <ref bean="fetchService" />
+		    <ref bean="subscriptionService" /> 
+		    <ref bean="healthDataService"/>
+		    <ref bean="registrationService"/>
+		    <ref bean="accountService"/>
+		    <ref bean="encryptionService" />
+		    <ref bean="decryptionService"/>
+			<ref bean="oauthService"/>
+			-->
+			<ref bean="flightService" />
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
+	
+	<!--  
+	<bean id="readingService" class="com.lifescan.dms.api.services.readings.ReadingService">
+		<property name="daoFactory" ref="daoFactory" />
+		<property name="mapper" ref="objectMapper" />
+		<property name="manipulatorFactory" ref="readingManipulatorFactory" />
+	</bean>
+	<bean id="searchService" class="com.lifescan.dms.api.services.search.SearchService">
+		<property name="daoFactory" ref="daoFactory" />
+		<property name="mapper" ref="objectMapper" />
+		<property name="searchFactory" ref="readingSearchFactory" />
+	</bean>
+	<bean id="fetchService" class="com.lifescan.dms.api.services.fetch.FetchService">
+		<property name="daoFactory" ref="daoFactory" />
+		<property name="mapper" ref="objectMapper" />
+		<property name="searchFactory" ref="readingSearchFactory" />
+	</bean>
+	<bean id="subscriptionService" class="com.lifescan.dms.api.services.subscription.SubscriptionService">
+		<property name="daoFactory" ref="daoFactory" />
+		<property name="daoUtil" ref="daoUtil" />
+		<property name="sessionManager" ref="sessionManager" />
+	</bean>
+	<bean id="healthDataService" class="com.lifescan.dms.api.services.healthdata.HealthDataService">
+		<property name="daoFactory" ref="daoFactory" />
+		<property name="mapper" ref="objectMapper" />
+		<property name="healthFactory" ref="healthDataFactory" />
+	</bean>
+	<bean id="registrationService" class="com.lifescan.dms.api.services.registration.RegistrationService">
+		<property name="mapper" ref="objectMapper" />
+	</bean>
+	<bean id="accountService" class="com.lifescan.dms.api.services.account.AccountService">
+		<property name="daoFactory" ref="daoFactory" />
+		<property name="mapper" ref="objectMapper" />
+	</bean>		
+	<bean id="encryptionService" class="com.lifescan.dms.api.services.crypto.EncryptionService">
+	</bean>
+	<bean id="decryptionService" class="com.lifescan.dms.api.services.crypto.DecryptionService">
+	</bean>
+	<bean id="oauthService" class="com.lifescan.dms.api.services.oauth.OauthService">
+	   <property name="sessionManager" ref="sessionManager" />
+	</bean>
+	
+	-->
+	<bean id="flightService" class="com.delta.rm.offer.api.services.flight.FlightService">
+	</bean>
+</beans>
